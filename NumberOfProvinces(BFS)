@@ -1,0 +1,50 @@
+class Solution {
+  public:
+  void BFS(int src ,vector<int>&vis,vector<int> con[])
+  {
+      queue<int> q;
+      vis[src]=1;
+      q.push(src);
+      
+      while(!q.empty())
+      {
+          int node=q.front();
+          q.pop();
+          for(auto it:con[node])
+          {
+              if(!vis[it])
+              {
+                  BFS(it,vis,con);
+              }
+          }
+      }
+      
+  }
+    int numProvinces(vector<vector<int>> adj, int V) {
+        // code here
+        int count=0;
+        vector<int> vis(V,0);
+        vector<int> con[V];
+        for(int i=0;i<V;i++)     //converting adj matrix into list
+        {
+            for(int j=0;j<V;j++)
+            {
+                if(adj[i][j]==1 && i!=j)
+                {
+                con[i].push_back(j);
+                con[j].push_back(i);
+                }
+            }
+        }                   // converted
+        
+        for(int i=0;i<V;i++)
+        {
+            if(!vis[i])
+           {
+            BFS(i,vis,con);
+            count++;
+           }
+        }
+        return count;
+    }
+};
