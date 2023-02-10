@@ -1,0 +1,39 @@
+//GFG 
+//the shortest path from src(0) to all the vertex and if it is unreachable to reach any vertex, then return -1 for that vertex.
+
+class Solution {
+  public:
+    vector<int> shortestPath(vector<vector<int>>& edges, int N,int M, int src){
+        // code here
+        vector<int> adj[N];
+        for(auto it:edges)
+        {
+            adj[it[0]].push_back(it[1]);
+            adj[it[1]].push_back(it[0]);
+        }
+        
+        queue<int> q;
+        vector<int>vis(N,0);
+        vector<int> ans(N,-1);
+        
+        vis[src]=1;
+        ans[src]=0;
+        q.push(src);
+        
+        while(!q.empty())
+        {
+            int node =q.front();
+            q.pop();
+            for(auto it:adj[node])
+            {
+                if(!vis[it])
+                {
+                    vis[it]=1;
+                    ans[it] = ans[node]+1;
+                    q.push(it);
+                }
+            }
+        }
+        return ans;     
+    }
+};
