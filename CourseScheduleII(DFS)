@@ -1,0 +1,46 @@
+//LEETCODE 211
+// prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+// Return the ordering of courses you should take to finish all courses. If there are many valid answers, return any of them. 
+// If it is impossible to finish all courses, return an empty array.
+
+class Solution {
+public:
+bool dfs(int src,vector<int> &vis,vector<int> &path,vector<int> &ans,vector<int> adj[])
+{
+    vis[src]=1;
+    path[src]=1;
+    
+    for(auto it:adj[src])
+    {
+        if(!vis[it]&&dfs(it,vis,path,ans,adj))
+        return true;
+        else if(path[it])
+        return true;
+    }
+    ans.push_back(src);
+    path[src]=0;
+    return false;
+}
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        int n = numCourses;
+        vector<int> adj[n];
+        for(auto it:prerequisites)
+        {
+            adj[it[1]].push_back(it[0]);
+        }
+        vector<int> vis(n,0);
+        vector<int> path(n,0);
+        vector<int> ans;
+
+        for(int i=0;i<n;i++)
+        {
+            if(!vis[i])
+            {
+            if(dfs(i,vis,path,ans,adj))
+            return {};
+            }
+        }
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
