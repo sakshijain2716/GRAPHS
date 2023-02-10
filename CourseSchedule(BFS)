@@ -1,0 +1,56 @@
+//LEETCODE 207
+//prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+// Return true if you can finish all courses. Otherwise, return false.
+
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        int n = numCourses;
+        int m = prerequisites.size();
+        vector<int> adj[n];
+        for(int i=0 ; i<m ; i++)
+        {
+             adj[prerequisites[i][0]].push_back(prerequisites[i][1]);
+        }
+//finding indegree of vertices
+        vector<int> indeg(n,0);  
+        for(int i=0;i<n;i++)
+        {
+            for(auto it:adj[i])
+            indeg[it]++;
+        }
+
+//pushing vertices with indegree=0 into queue for strting traversal
+        queue<int>q;
+        for(int i=0;i<n;i++)
+        {
+            if(indeg[i]==0)
+            q.push(i);
+        }
+
+ //if cycle is present then no vertex will have indeg=0
+        if(q.empty())     
+        return false;
+
+//topological sort using BFS(KAHN'S ALGO)
+        while(!q.empty())
+        {
+            int node = q.front();
+            q.pop();
+            for(auto it:adj[node])
+            {
+                indeg[it]--;
+                if(indeg[it]==0)
+                q.push(it);
+            }
+        }
+        //checking if all vertices are visited completely
+        for(int i=0;i<n;i++)
+        {
+            if(indeg[i]!=0)
+            return false;
+        }
+        return true;
+
+    }
+};
