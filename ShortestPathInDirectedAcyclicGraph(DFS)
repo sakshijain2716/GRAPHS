@@ -1,0 +1,60 @@
+class Solution {
+  public:
+  void dfs(int src,vector<int>&vis,stack<int>&st,vector<pair<int,int>> adj[])
+  {
+      vis[src]=1;
+      
+      for(auto it:adj[src])
+      {
+          if(!vis[it.first])
+          dfs(it.first,vis,st,adj);
+      }
+      st.push(src);
+  }
+  vector<int> shortestPath(int N,int M, vector<vector<int>>& edges){
+        // code here
+        vector<pair<int,int>> adj[N];
+        for(int i=0;i<M;i++){
+            int u=edges[i][0];
+            int v=edges[i][1];
+            int weight = edges[i][2]; 
+            
+             adj[u].push_back({v,weight});
+        }
+        
+        stack<int>st;
+        vector<int>topo;
+        vector<int> vis(N,0);
+        
+        for(int i=0;i<N;i++)
+        {
+            if(!vis[i])
+            dfs(i,vis,st,adj);
+        }
+         vector<int>ans(N,INT_MAX);
+        ans[0]=0;
+        
+        while(!st.empty())
+        {
+            int node = st.top();
+            st.pop();
+            
+            if(ans[node]!=INT_MAX)
+            {
+                for(auto it:adj[node])
+                {
+                    if(ans[it.first]>ans[node]+it.second)
+                    ans[it.first]=ans[node]+it.second;
+                }
+            }
+        }
+        
+        for(int i=0;i<N;i++)
+        {
+            if(ans[i]==INT_MAX)
+            ans[i]=-1;
+        }
+        return ans;
+        
+    }
+};
