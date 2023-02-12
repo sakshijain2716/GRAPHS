@@ -1,0 +1,67 @@
+// Find the shortest path from src(0) vertex to all the vertices and if it is impossible to reach any vertex, then return -1 for that vertex.
+
+class Solution {
+  public:
+     vector<int> shortestPath(int N,int M, vector<vector<int>>& edges){
+        // code here
+        vector<pair<int,int>> adj[N];
+        for(int i=0;i<M;i++){
+            int u=edges[i][0];
+            int v=edges[i][1];
+            int weight = edges[i][2]; 
+            
+             adj[u].push_back({v,weight});
+        }
+        vector<int>indeg(N,0);
+        for(int i=0;i<N;i++)
+        {
+            for(auto it:adj[i])
+            indeg[it.first]++;
+        }
+        
+        queue<int>q;
+        vector<int>topo;
+        vector<int> vis(N,0);
+        for(int i=0;i<N;i++)
+        {
+            if(indeg[i]==0)
+            q.push(i);
+        }
+        while(!q.empty())
+        {
+            int node=q.front();
+            q.pop();
+            topo.push_back(node);
+            for(auto it:adj[node])
+            {
+                if(!vis[it.first])
+                {
+                    vis[it.first]=1;
+                    q.push(it.first);
+                }
+            }
+        }
+        
+        vector<int>ans(N,INT_MAX);
+        ans[0]=0;
+        for(int i=0;i<N;i++)
+        {
+            if(ans[i]!=INT_MAX)
+            {
+                for(auto it:adj[i])
+                {
+                    if(ans[it.first]>ans[i]+it.second)
+                    ans[it.first]=ans[i]+it.second;
+                }
+            }
+        }
+        
+        for(int i=0;i<N;i++)
+        {
+            if(ans[i]==INT_MAX)
+            ans[i]=-1;
+        }
+        return ans;
+        
+    }
+};
